@@ -29,9 +29,9 @@ console.log(`Результат: ≈ ${result3.toFixed(2)}`); // 63399251.64
 
 // Сравнение четных и нечетных чисел
 
-let e = 50;
-let f = 19;
-let g = 16;
+const e = 50;
+const f = 19;
+const g = 16;
 
 console.log( "g → четное?", g % 2 === 0); // true Остаток после деления 0 → число четное
 console.log("f → четное?", f % 2 === 0); // false Остаток после деления 1 → число нечетное
@@ -54,3 +54,14 @@ function greet(name) {
 console.log("✅ Приветствие при пустом имени:", greet(nameEmpty));
 console.log("✅ Приветствие при незаданной переменной:", greet(nameUndefined));
 console.log("✅ Приветствие при заданном имени:", greet(nameFilled));
+
+
+//Тернарный оператор
+function greet(name) {
+    return name ? `Hello, ${name}!` : "Hello, Guest!";
+}
+
+// Примеры:
+console.log(greet("Anna"));  // Hello, Anna!
+console.log(greet(""));      // Hello, Guest!
+console.log(greet());        // Hello, Guest!
