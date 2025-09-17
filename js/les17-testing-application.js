@@ -91,14 +91,18 @@ const questions = [
     }
 ];
 
-let currentIndex = 0;
-let score = 0;
+let currentIndex = 0; // Отслеживает текущий вопрос
+let score = 0; // Считает правильные ответы
+let questionTimer; // Таймер для текущего вопроса
+const TIME_LIMIT = 60000; // Время на ответ в миллисекундах
+
 
 const startBtn = document.getElementById('startBtn');
 const questionContainer = document.getElementById('questionContainer');
 const resultContainer = document.getElementById('resultContainer');
 const restartBtn = document.getElementById('restartBtn');
 
+// Обработчик запуска викторины
 startBtn.onclick = () => {
     startBtn.style.display = 'none'; // скрываем кнопку
     currentIndex = 0;
@@ -129,21 +133,34 @@ function showQuestion() { // Объявляем функцию
         const input = document.createElement('input'); // Создаём поле ввода для текста.
         input.type = 'text'; // Указываем, что это обычное текстовое поле.
         input.placeholder = 'Введите ответ...'; // Устанавливаем текст-подсказку внутри поля ввода.
-        input.id = 'textInput'; // Присваиваем ID, чтобы потом легко получить значение.
+        input.id = 'answerInput'; // Присваиваем ID, чтобы потом легко получить значение.
         questionContainer.appendChild(input); // Добавляем поле ввода в DOM.
 
         const submitBtn = document.createElement('button'); // Создаём кнопку "Ответить".
         submitBtn.textContent = 'Ответить'; // Устанавливаем текст кнопки.
         submitBtn.onclick = () => {
-            const userInput = document.getElementById('textInput').value; // Получаем значение из текстового поля.
+            const userInput = document.getElementById('answerInput').value; // Получаем значение из текстового поля.
             handleTextAnswer(userInput); // Передаём его в функцию обработки ответа.
         };
         questionContainer.appendChild(submitBtn); // Добавляем кнопку "Ответить" в DOM.
     }
+    // Запускаем логический таймер, который автоматически завершит вопрос по истечении времени
+    startQuestionTimer();
+
+    // Запускаем визуальный таймер обратного отсчёта, отображаемый на экране
+    startCountdownDisplay();
 }
 
 // Функция для вопросов с вариантами ответа
 function handleChoiceAnswer(index) { // Объявляем функцию
+    clearTimeout(questionTimer); //Очищаем основной таймер
+
+    const timerDisplay = document.getElementById("timerDisplay");
+    if (timerDisplay) {
+        clearInterval(timerDisplay.dataset.intervalId); // Останавливаем визуальный таймер
+        timerDisplay.remove(); // Удаляем его из DOM
+    }
+
     const question = questions[currentIndex]; // Получаем текущий вопрос из массива по индексу.
     const isCorrect = index === question.correct; // Проверяем, совпадает ли выбранный вариант с правильным.
 
@@ -176,8 +193,52 @@ function handleChoiceAnswer(index) { // Объявляем функцию
 
 // Функция для открытых вопросов
 function handleTextAnswer(input) { // Объявляем функцию
-    const question = questions[currentIndex]; // Получаем текущий вопрос
     const normalized = input.trim().toLowerCase(); // Приводим ввод к нижнему регистру и убираем лишние пробелы для надежного сравнения
+    const inputField = document.getElementById("answerInput"); // Получаем поле ввода
+    let errorMessage = document.getElementById("errorMessage"); // Получаем блок для сообщения об ошибке
+
+    //Проверка: если поле пустое — не продолжаем
+    if (normalized === "") {
+
+        // Если блок для ошибки не существует — создаём
+        if (!errorMessage) {
+            errorMessage = document.createElement("p");
+            errorMessage.id = "errorMessage";
+            errorMessage.style.display = "none"; // Скрыт по умолчанию
+            questionContainer.appendChild(errorMessage);
+        }
+
+        // Подсветка поля
+        if (inputField) {
+            inputField.style.backgroundColor = "#ffcdd2";
+            inputField.style.transition = "all 0.3s ease";
+            inputField.focus();
+
+            // Автоочистка при вводе
+            inputField.addEventListener("input", () => {
+                inputField.style.backgroundColor = "";
+                errorMessage.style.display = "none";
+            }, { once: true });
+        }
+
+        // Показ сообщения об ошибке
+        errorMessage.textContent = "Пожалуйста, введите ответ.";
+        errorMessage.style.color = "#d32f2f";
+        errorMessage.style.display = "block";
+
+        return; // Прерываем выполнение
+    }
+    // Очищаем таймер только после валидного ввода
+    clearTimeout(questionTimer);
+
+    // Установка и удаление визуального таймера
+    const timerDisplay = document.getElementById("timerDisplay");
+    if (timerDisplay) {
+        clearInterval(timerDisplay.dataset.intervalId); // Останавливаем визуальный таймер
+        timerDisplay.remove(); // Удаляем его из DOM
+    }
+
+    const question = questions[currentIndex]; // Получаем текущий вопрос
     let matchCount = 0; // Счётчик совпавших ключевых слов.
 
     // Проверяем наличие ключевых слов
@@ -222,6 +283,8 @@ function handleTextAnswer(input) { // Объявляем функцию
 
     questionContainer.appendChild(feedback); // Добавляем сообщение обратной связи в DOM, чтобы оно появилось на странице
 
+    console.log("Ответ обработан, переход к следующему вопросу через 4 секунды");
+
     // Автоматический переход к следующему вопросу через 5 секунд
     setTimeout(nextQuestion, 4000);
 }
@@ -239,7 +302,26 @@ function nextQuestion() { // Объявляем функцию
 function showResult() { // Объявляем функцию
     questionContainer.innerHTML = ''; // Очищаем контейнер с вопросами — скрываем всё, что было на экране
     const percent = Math.round((score / questions.length) * 100); // Вычисляем процент правильных ответов.
-    resultContainer.innerHTML = `<p>Тест завершён! Ваш результат: ${percent}% (${score} из ${questions.length})</p>`; // Выводим сообщение с результатом: процент и количество правильных ответов.
+
+    // Сохраняем лучший результат, если он выше предыдущего
+    const previousBest = localStorage.getItem("bestScore");
+    if (!previousBest || percent > parseInt(previousBest)) {
+        localStorage.setItem("bestScore", percent);
+    }
+
+    resultContainer.innerHTML = '';
+
+    const currentResult = document.createElement("p");
+    currentResult.innerHTML = `Тест завершён! Ваш результат: ${percent}% (${score} из ${questions.length})`;
+    resultContainer.appendChild(currentResult);
+
+    // Показываем лучший результат, если он есть
+    const bestScore = localStorage.getItem("bestScore");
+    if (bestScore) {
+        const bestResult = document.createElement("p");
+        bestResult.innerHTML = `Ваш лучший результат: ${bestScore}%`;
+        resultContainer.appendChild(bestResult);
+    }
 
     restartBtn.style.display = 'inline-block'; // Показываем кнопку "Перезапустить тест", чтобы пользователь мог пройти его снова.
     restartBtn.onclick = () => { // Назначаем обработчик клика на кнопку перезапуска.
@@ -251,3 +333,43 @@ function showResult() { // Объявляем функцию
     };
 }
 
+// Функция таймера 
+function startQuestionTimer() {
+    questionTimer = setTimeout(() => {
+        const oldFeedback = document.getElementById("feedback");
+        if (oldFeedback) oldFeedback.remove();
+
+        const feedback = document.createElement("p");
+        feedback.id = "feedback";
+        feedback.innerHTML = `<span style="color: #d32f2f;">Время вышло. Ответ не засчитан.</span>`;
+        feedback.style.color = "#d32f2f";
+        questionContainer.appendChild(feedback);
+
+        console.log("Время истекло.");
+        setTimeout(nextQuestion, 4000);
+    }, TIME_LIMIT);
+}
+// Функция отсчета
+function startCountdownDisplay() {
+    const existingDisplay = document.getElementById("timerDisplay");
+    if (existingDisplay) existingDisplay.remove(); // удаляем старый таймер, если есть
+
+    let countdown = TIME_LIMIT / 1000;
+    const timerDisplay = document.createElement("p");
+    timerDisplay.id = "timerDisplay";
+    timerDisplay.textContent = `Осталось времени: ${countdown} сек.`;
+    timerDisplay.style.color = "#2e7d32";
+    questionContainer.appendChild(timerDisplay);
+
+    const interval = setInterval(() => {
+        countdown--;
+        timerDisplay.textContent = `Осталось времени: ${countdown} сек.`;
+
+        if (countdown <= 0) {
+            clearInterval(interval);
+        }
+    }, 1000);
+
+    // Сохраняем ID интервала для последующей очистки
+    timerDisplay.dataset.intervalId = interval;
+}
