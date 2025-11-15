@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Текстовая RPG Игра</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./reset.css">
+    <link rel="stylesheet" href="./commons.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Текстовая RPG Игра</h1>
+    </header>
+
+    <div class="container" id="gameScreen">
+        <div class="character-panel panel-row">
+            <section class="stats panel-box">
+                <h2>Персонаж</h2>
+                <div class="stats-list vertical-stack">
+                    <p id="name">Имя: <span class="value">Луна</span></p>
+                    <p id="health">Жизни: <span class="value">100</span></p>
+                    <p id="strength">Сила: <span class="value">10</span></p>
+                    <p id="defense">Защита: <span class="value">5</span></p>
+                    <p id="level">Уровень: <span class="value">1</span></p>
+                    <p id="inventory">Инвентарь: <span id="char-inventory-count">2</span></p>
+                    <p id="gold">Золото: <span class="value">0</span></p>
+                </div>
+            </section>
+        
+            <section class="actions panel-box">
+                <h2>Действия</h2>
+                <div class="action-buttons vertical-stack">
+                    <button class="attack" onclick="attackEnemy()">Атаковать</button>
+                    <button class="defend" onclick="defend()">Защититься</button>
+                    <button class="use" onclick="openInventoryModal()">Использовать инвентарь</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="world-panel panel-row">
+            <section class="location panel-box">
+                <h2>Текущая локация: <span id="locationText" class="location-text">Деревня</span></h2>
+            
+                <div class="location-buttons vertical-stack">
+                    <button class="go-forest" onclick="goTo('forest')">Идти в лес</button>
+                    <button class="go-cave" onclick="goTo('cave')">Идти в пещеру</button>
+                    <button class="go-village" onclick="goTo('village')">Вернуться в деревню</button>
+                </div>
+            </section>
+
+            <section class="log panel-box">
+                <h2>История действий</h2>
+                <div id="battleLog" class="log-box">
+                    <p>Игра началась. Удачи!</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="restart-wrapper hidden" id="deathScreen">
+        <h2>Луна погибла...</h2>
+        <button class="restart-button" onclick="restartGame()">Перезапустить игру</button>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

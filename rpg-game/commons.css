@@ -1,0 +1,143 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #fff6f9;
+  color: #4a4a4a;
+}
+
+.panel-row {
+  display: flex;
+  gap: 20px;
+}
+
+.panel-box {
+  width: 50%;
+  padding: 20px;
+  border: 2px solid #f4c2d7;
+  border-radius: 14px;
+  background-color: #fff0f5;
+  height: 255px;
+  font-size: 16px;
+}
+
+.panel-box h2 {
+  margin-bottom: 12px;
+  color: #a64ca6;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.vertical-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 81%;
+}
+
+button {
+  margin: 0;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+button:hover {
+  opacity: 0.95;
+  transform: scale(1.05);
+}
+
+button:focus { /* чтобы убрать черную рамку с кнопок */
+  outline: none;
+}
+
+/* Модальные окна */
+
+/* Затемнение фона */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Окно */
+.modal-window {
+  width: 320px;
+  overflow-y: auto;
+  padding: 20px;
+  border: 2px solid #f4c2d7;
+  border-radius: 14px;
+  background-color: #fff0f5;
+  max-height: 80vh;
+  font-size: 16px;
+}
+
+/* Заголовок */
+.modal-window h2 {
+  margin-bottom: 12px;
+  color: #a64ca6;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.modal-window p {
+  margin-bottom: 16px;
+}
+
+/* Список предметов */
+.inventory-list {
+  list-style: none;
+}
+
+/* Предмет */
+.item-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fff;
+  border: 2px solid #f4c2d7;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+/* Общий стиль для всех кнопок внутри item-entry */
+.item-entry .action-btn {
+  margin-top: 8px;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Модификатор: кнопка "Использовать" */
+.action-btn.use {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Модификатор: кнопка: "Пополнить здоровье" */
+.action-btn.health {
+  background-color: #d0f0f7;
+  color: #007b8a;
+}
+
+/* Кнопка закрытия */
+.close-btn {
+  display: block;
+  margin: 16px auto 0;
+  background-color: #f8c8dc;
+  color: #8c2f4b;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
