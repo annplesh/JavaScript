@@ -71,7 +71,7 @@ function updateStats() {
 
     // === Проверка на гибель персонажа ===
     const gameScreen = document.getElementById("gameScreen");
-    const deathScreen = document.querySelector(".restart-wrapper");
+    const deathScreen = document.getElementById("deathScreen");
 
     if (character.health <= 0) {
         gameScreen.style.display = "none";
@@ -202,11 +202,11 @@ function attackEnemy() {
         // Передача золота
         character.gold += currentEnemy.goldReward;
         logAction(`💰 Луна получает ${currentEnemy.goldReward} золота!`);
-        
+
         // Повышение уровня
         character.level += 1;
         logAction(`⭐ Луна повысила уровень! Теперь уровень ${character.level}`);
-        
+
         // Передача предметов
         if (currentEnemy.inventory && currentEnemy.inventory.length > 0) {
             currentEnemy.inventory.forEach(itemName => {
