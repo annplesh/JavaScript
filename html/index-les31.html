@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage и SessionStorage</title>
+</head>
+<body>
+    <h2>Контактная форма</h2>
+    
+    <form id="contactForm">
+        <label>
+            Имя:
+            <input type="text" id="name" name="name">
+        </label>
+        <br>
+        <br>
+        <label>
+            Телефон:
+            <input type="text" id="phone" name="phone">
+        </label>
+        <br>
+        <br>
+        <label>
+            Email:
+            <input type="email" id="email" name="email">
+        </label>
+        <br>
+        <br>
+        <button type="submit">Сохранить</button>
+    </form>
+    
+    <h2>Сохранённые данные:</h2>
+    <div id="output"></div>
+    
+    <h2>Учёт расходов</h2>
+    
+    <form id="expenseForm">
+        <label>
+            Описание:
+            <input type="text" id="description" required>
+        </label>
+        <br><br>
+        <label>
+            Сумма:
+            <input type="number" id="amount" required>
+        </label>
+        <br><br>
+        <label>
+            Дата:
+            <input type="date" id="date" required>
+        </label>
+        <br><br>
+        <button type="submit">Добавить расход</button>
+    </form>
+    
+    <h2>Список расходов:</h2>
+    <table id="expenseTable" border="1" cellspacing="0" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Описание</th>
+                <th>Сумма</th>
+                <th>Дата</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody id="expenseList"></tbody>
+    </table>
+
+    <script src="../js/les31-local-session-storage.js"></script>
+</body>
+</html>
