@@ -31,23 +31,57 @@ form.addEventListener('submit', async (event) => {
         body: form.body.value.trim()
     };
 
-    try {
-        // Выполняем POST-запрос
-        //! Важно: переменные, объявленные через const, существуют только внутри своей области видимости (scope).
-        //! Поэтому если мы используем одно и то же имя переменной (например, response)
-        //! в разных функциях или блоках кода, ошибки не будет — это разные "локальные" переменные.
+    // 4. Реализуй функциональность для обновления данных пользователя.
+    // Используй PUT запрос для отправки обновленных данных на сервер
+    // и отобрази обновленный профиль на странице.
+    // Объясни, в чём разница между PUT и PATCH запросами.
 
-        const response = await fetch(API_URL, { // ! нет ошибки так как эта response живёт только внутри обработчика submit
-            method: 'POST',
+    // Проверяем чекбокс "Обновить существующий пост"
+    const postId = Number(form.postId.value); // ID поста для обновления
+    
+    
+    const updateMode = document.getElementById('updateMode').checked; // находим элемент чекбокса
+    // Свойство .checked возвращает true, если чекбокс отмечен, и false, если нет.
+    // - В переменной updateMode будет булево значение:
+    // - true → пользователь хочет обновить пост.
+    // - false → пользователь хочет создать новый пост.
+
+    // Если updateMode === true, то мы формируем URL для обновления поста:
+    // https://jsonplaceholder.typicode.com/posts/{userId}
+    // Если updateMode === false, то берём базовый URL:
+    // https://jsonplaceholder.typicode.com/posts
+    const url = updateMode
+        ? `${API_URL}/${postId}` // обновляем конкретный пост
+        : API_URL; // иначе создаём новый пост
+
+    // Если updateMode === true → метод запроса будет 'PUT'.
+    //Если updateMode === false → метод запроса будет 'POST'
+    const method = updateMode ? 'PUT' : 'POST';
+
+    try {
+        // Логи для проверки работы формы
+        console.log('Метод:', method);
+        console.log('URL:', url);
+        console.log('Payload:', payload);
+
+        const response = await fetch(url, {
+            method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
+
+        // проверяем, что сервер вернул статус 200–299.
+        // Если статус другой(например, 404 или 500), мы сами выбрасываем исключение через throw new Error(...).
+        // Это нужно, потому что fetch по умолчанию не считает 404 / 500 ошибкой — он всё равно возвращает объект Response.
+        if (!response.ok) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
 
         // Преобразуем ответ в JSON
         const data = await response.json();
 
         // Отображаем ответ сервера
-        responseBox.textContent = JSON.stringify(data, null, 2); 
+        responseBox.textContent = JSON.stringify(data, null, 2);
         // объект data превращаем в строку
         // replacer — фильтр (обычно null, чтобы взять все поля)
         // space = 2
@@ -113,50 +147,6 @@ async function deletePost(id) {
         handleError(error, postsList);
     }
 }
-
-// 4. Реализуй функциональность для обновления данных пользователя. 
-// Используй PUT запрос для отправки обновленных данных на сервер 
-// и отобрази обновленный профиль на странице. 
-// Объясни, в чём разница между PUT и PATCH запросами.
-
-// Находим элементы формы и контейнер для ответа
-const updateForm = document.getElementById('updateForm');
-const updateBox = document.getElementById('updateResponse');
-
-// Обработчик отправки формы
-updateForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // предотвращаем перезагрузку страницы
-
-    // Формируем объект с данными из формы
-    const payload = {
-        id: Number(updateForm.userId.value),
-        name: updateForm.name.value.trim(),
-        email: updateForm.email.value.trim()
-    };
-
-    try {
-        // Отправляем PUT-запрос (полное обновление ресурса)
-        const response = await fetch(`${API_URL}/${payload.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        // Проверяем успешность ответа
-        if (!response.ok) {
-            throw new Error(`Ошибка обновления: ${response.status}`);
-        }
-
-        // Преобразуем ответ в JSON
-        const data = await response.json();
-
-        // Отображаем обновлённый профиль
-        updateBox.textContent = JSON.stringify(data, null, 2);
-
-    } catch (error) {
-        handleError(error, updateBox);
-    }
-});
 
 // Разница:
 // PUT   — полная замена ресурса (все поля пересоздаются)
