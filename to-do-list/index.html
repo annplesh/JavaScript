@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="todo-app">
+        <h1>To-Do List</h1>
+    
+        <div class="task-input">
+            <input type="text" id="new-task" placeholder="Введите задачу..." />
+            <button id="add-task" class="todo-button">Добавить задачу</button>
+        </div>
+    
+        <ul class="task-list"></ul>
+        
+        <template id="task-template">
+            <li class="task-item">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" class="task-checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="task-title"></span>
+                </label>
+
+                <div class="task-actions">
+                    <img class="task-icon" src="./icons/bell.png" alt="Установить таймер">
+                    <button class="delete-btn">Удалить</button>
+                </div>
+            </li>
+        </template>
+        
+        <!--
+        <div class="pagination">
+            <button id="prev" class="paging-btn">
+                <svg width="51" height="12" viewBox="0 0 51 12" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M0.469669 6.53033C0.176777 6.23744 0.176777 5.76256 0.469669 5.46967L5.24264 0.696699C5.53553 0.403806 6.01041 0.403806 6.3033 0.696699C6.5962 0.989593 6.5962 1.46447 6.3033 1.75736L2.06066 6L6.3033 10.2426C6.5962 10.5355 6.5962 11.0104 6.3033 11.3033C6.01041 11.5962 5.53553 11.5962 5.24264 11.3033L0.469669 6.53033ZM51 6.75H1V5.25H51V6.75Z"
+                        fill="currentColor" />
+                </svg>
+            </button>
+        
+
+            <div class="pages"></div>
+        
+            <button id="next" class="paging-btn">
+                <svg width="51" height="12" viewBox="0 0 51 12" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M50.5303 6.53033C50.8232 6.23744 50.8232 5.76256 50.5303 5.46967L45.7574 0.696699C45.4645 0.403806 44.9896 0.403806 44.6967 0.696699C44.4038 0.989593 44.4038 1.46447 44.6967 1.75736L48.9393 6L44.6967 10.2426C44.4038 10.5355 44.4038 11.0104 44.6967 11.3033C44.9896 11.5962 45.4645 11.5962 45.7574 11.3033L50.5303 6.53033ZM0 6.75H50V5.25H0V6.75Z"
+                        fill="currentColor" />
+                </svg>
+            </button>
+        </div>
+        -->
+
+        <div class="task-filters">
+            <button id="filter-all" class="todo-button filter-button active" data-filter="all">Все задачи</button>
+            <button id="filter-completed" class="todo-button filter-button" data-filter="completed">Выполненные задачи</button>
+            <button id="filter-incomplete" class="todo-button filter-button" data-filter="incomplete">Невыполненные задачи</button>
+        </div>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html>
